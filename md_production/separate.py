@@ -1,0 +1,55 @@
+from subprocess import run
+import os
+import glob
+import yaml
+import math
+import shutil
+import sys
+import numpy as np
+import pandas as pd
+import argparse
+import datetime
+from rdkit import Chem
+from rdkit.Chem import AllChem
+
+
+import json
+
+bash=lambda x:run(x,shell=True)
+
+base = os.path.dirname(os.path.abspath(__file__))
+
+def separate(setting, reslist):
+    nums = setting['edit_trajectory']['necessary-snaps']
+    outdir = setting['edit_trajectory']['output_dir']
+    if not os.path.exists(outdir):
+        os.makedirs(outdir)
+    confs = 'conformations.pdb'
+    lines = sum([1 for _ in open(confs,'r')])
+    perconf = int(lines/(nums+1))
+
+    with open(confs)as f:
+        ls = f.readlines()
+        ls_rstrip = [l.rstrip("\n") for l in ls]
+    for i in range(nums):
+        with open(outdir+'/conf_'+str(i+1)+'.pdb', 'a')as out:
+            for j in range(i*perconf, (i+1)*perconf):
+                out.write("%s\n" % ls_rstrip[j])
+
+    for i in range(nums):
+        f_p = outdir+'/prot_'+str(i+1)+'.pdb'
+        f_l = outdir+'/lig_'+str(i+1)+'.pdb'
+        protlist = []
+        liglist = []
+        for j in open(outdir+'/conf_'+str(i+1)+'.pdb'):
+            if j[0:6]=='ATOM  ' or j[0:6]=='HETATM':
+                if j[17:20].replace(' ','') in reslist:
+                    protlist.append(j.rstrip("\n"))
+                if j[17:20].replace(' ','')==setting['preparation']['ligand_resname']:
+                    liglist.append(j.rstrip("\n"))
+        with open(f_p,'a')as out:
+            for j in protlist:
+                out.write("%s\n" % j)
+        with open(f_l,'a')as out:
+            for j in liglist:
+                out.write("%s\n" % j)

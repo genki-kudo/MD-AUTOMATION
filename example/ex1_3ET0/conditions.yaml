@@ -1,0 +1,61 @@
+###inputs (will add these conditions)###
+
+##################################################
+###入力構造に求められる条件###
+###タンパク質とヒット化合物の複合体構造
+###タンパク質の残基名をプロトン化状態によって変更する
+###ex. HIS->HIE/HID/HIP
+###タンパク質disorderがある場合は、マニュアルで残基補完orキャッピングする
+###ヒット化合物および非タンパク質残基は水素付加された構造とする
+###イオンが配位している場合は、該当のCONECT行を削除する(本手法ではNon-bonded Modelを採用するため)
+##################################################
+
+preparation:
+  complex_name    : 3ET0_fix230515.pdb
+  ligand_resname  : ET0
+  other_necessary_residue : 
+    #- SAH
+    #- ATP
+  #if necessary, specify other comps (ex.SAH, ATP, etc.)
+
+  charge_method : gas
+  #select charge methods of compound
+  #you can select from gas/bcc/...
+
+  number_of_cpus: 8
+
+
+
+
+tleap:
+  checks : true
+  #if true-> perform only tleap and check whether tleap is OK or NOT.
+  box : rectangular
+  #you can select either "rectangular" or "cube"
+  rect_around_box : 15.0
+  #if you select "box : rectangular", specify the minimum distance from solute
+  cube_size : 70
+  #if you select "box : cube", specify the length of box
+  translate_origin : true
+  #select true or false (do you want to translate the centroid of protein for (x,y,z)=(0,0,0)?)
+
+  ff_protein : ff14SB
+  ff_ligand  : gaff
+  ff_water   : tip3p
+
+  ligand_parameter : 
+  #if you prepare lig.prep and lig.frcmod for accurate parameter use.
+
+
+
+production:
+  runtime         : 500 #ps-order 
+  timestep        : 0.002 #ps-order
+  output-interval : 50   #ps-order
+  velocity generation : false
+
+edit_trajectory:
+  start-range : 0 #ps-order
+  end-range : 500 #ps-order
+  necessary-snaps : 5 #number [ necessary-snaps <= (end-start)/interval ]
+  output_dir : ./separate_file/
