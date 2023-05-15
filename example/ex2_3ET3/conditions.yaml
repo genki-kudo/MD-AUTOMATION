@@ -57,5 +57,5 @@ production:
 edit_trajectory:
   start-range : 0 #ps-order
   end-range : 500 #ps-order
-  necessary-snaps : 5 #number [ necessary-snaps <= (end-start)/interval ]
+  necessary-snaps : 5  #number [ necessary-snaps <= (end-start)/interval ]
   output_dir : ./separate_file/
