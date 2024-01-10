@@ -23,57 +23,18 @@ bash=lambda x:run(x,shell=True)
 
 ###input args###
 conditions = str(sys.argv[1]) # condition.yaml
-input_dir = str(sys.argv[2]) # ./
-temp_dir = str(sys.argv[3]) # Tsukuba_workflow/MD/
-out_dir = str(sys.argv[4]) # Tsukuba_workflow/P2C_SINCHO/ out/yyyymmdd/sincho_out/
+work_dir = str(sys.argv[2]) # Tsukuba_workflow/P2C_SINCHO/
+hdir =os.getcwd()
 
 ###load and preparation###
 with open(conditions,'r')as f:
     setting = yaml.safe_load(f)
 
-for i in range(2,5):
-    if not os.path.exists(str(sys.argv[i])):
-        os.makedirs(str(sys.argv[i]))
+nums = setting['edit_trajectory']['necessary-snaps']
 
-reslist = input_check(setting, input_dir, temp_dir)
-
-"""
-tleap_exec(setting, temp_dir)
-convert(temp_dir)
-
-###equilibration###
-equilibration(setting,temp_dir)
-
-###prodiction###
-
-production(setting, temp_dir)
-
-"""
-#trjconv(setting, temp_dir)
-
-
-separate(setting, reslist, temp_dir)
-
-outputs(setting, temp_dir, out_dir)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+for i in range(nums+1):
+    os.chdir(hdir+"/"+work_dir+"/trajectory_"+str(i).zfill(3)+"/")
+    bash('rm -r asphere_output/ p2c_output/ sincho*')
+    bash('p2c -m LB -p prot_'+str(i).zfill(3)+'.pdb -l lig_'+str(i).zfill(3)+'.pdb -d 10.0')
+    bash('sincho -p prot_'+str(i).zfill(3)+'.pdb -l lig_'+str(i).zfill(3)+'.pdb -n 20 ')
+  

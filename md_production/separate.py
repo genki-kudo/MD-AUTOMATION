@@ -19,7 +19,10 @@ bash=lambda x:run(x,shell=True)
 
 base = os.path.dirname(os.path.abspath(__file__))
 
-def separate(setting, reslist):
+
+def separate(setting, reslist, temp_dir):
+    hdir = os.getcwd()
+    os.chdir(temp_dir)
     nums = setting['edit_trajectory']['necessary-snaps']
     outdir = setting['edit_trajectory']['output_dir']
     if not os.path.exists(outdir):
@@ -31,21 +34,21 @@ def separate(setting, reslist):
     with open(confs)as f:
         ls = f.readlines()
         ls_rstrip = [l.rstrip("\n") for l in ls]
-    for i in range(nums):
-        with open(outdir+'/conf_'+str(i+1)+'.pdb', 'a')as out:
+    for i in range(nums+1):
+        with open(outdir+'/conf_'+str(i).zfill(3)+'.pdb', 'a')as out:
             for j in range(i*perconf, (i+1)*perconf):
                 out.write("%s\n" % ls_rstrip[j])
 
-    for i in range(nums):
-        f_p = outdir+'/prot_'+str(i+1)+'.pdb'
-        f_l = outdir+'/lig_'+str(i+1)+'.pdb'
+    for i in range(nums+1):
+        f_p = outdir+'/prot_'+str(i).zfill(3)+'.pdb'
+        f_l = outdir+'/lig_'+str(i).zfill(3)+'.pdb'
         protlist = []
         liglist = []
-        for j in open(outdir+'/conf_'+str(i+1)+'.pdb'):
+        for j in open(outdir+'/conf_'+str(i).zfill(3)+'.pdb'):
             if j[0:6]=='ATOM  ' or j[0:6]=='HETATM':
                 if j[17:20].replace(' ','') in reslist:
                     protlist.append(j.rstrip("\n"))
-                if j[17:20].replace(' ','')==setting['preparation']['ligand_resname']:
+                if j[17:20].replace(' ','')==str(setting['preparation']['ligand_resname']):
                     liglist.append(j.rstrip("\n"))
         with open(f_p,'a')as out:
             for j in protlist:
@@ -53,3 +56,4 @@ def separate(setting, reslist):
         with open(f_l,'a')as out:
             for j in liglist:
                 out.write("%s\n" % j)
+    os.chdir(hdir)

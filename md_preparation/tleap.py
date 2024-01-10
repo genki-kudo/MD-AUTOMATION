@@ -17,7 +17,9 @@ import json
 
 bash=lambda x:run(x,shell=True)
 
-def tleap_exec(setting):
+def tleap_exec(setting, temp_dir):
+    hdir = os.getcwd()
+    os.chdir(temp_dir)
 
     # Load PDB file and parse structure
     pdb = Chem.MolFromPDBFile(str(setting['preparation']['complex_name']))
@@ -42,14 +44,14 @@ def tleap_exec(setting):
         print('source leaprc.protein.'+setting['tleap']['ff_protein'], file=leap)
         print('source leaprc.'+setting['tleap']['ff_ligand'], file=leap)
         print('source leaprc.water.'+setting['tleap']['ff_water'], file=leap)
-        print('loadAmberPrep '+setting['preparation']['ligand_resname']+'.prep', file=leap)
-        print('loadamberparams '+setting['preparation']['ligand_resname']+'.frcmod', file=leap)
+        print('loadAmberPrep '+str(setting['preparation']['ligand_resname'])+'.prep', file=leap)
+        print('loadamberparams '+str(setting['preparation']['ligand_resname'])+'.frcmod', file=leap)
         if setting['preparation']['other_necessary_residue']:
             for j in setting['preparation']['other_necessary_residue']:
-                print('loadAmberPrep '+j+'.prep', file=leap)
-                print('loadamberparams '+j+'.frcmod', file=leap)
-        #print('loadamberparams frcmod.ions1lm_1264_tip3p', file=leap)
-        print('loadamberparams frcmod.ions234lm_1264_tip3p', file=leap)
+                print('loadAmberPrep '+str(j)+'.prep', file=leap)
+                print('loadamberparams '+str(j)+'.frcmod', file=leap)
+        print('loadamberparams frcmod.ions1lm_1264_tip3p', file=leap)
+        #print('loadamberparams frcmod.ions234lm_1264_tip3p', file=leap)
         
         print()
         
@@ -83,4 +85,5 @@ def tleap_exec(setting):
     else:
         print("TLEAP FAILED.")
         exit()
+    os.chdir(hdir)
     return

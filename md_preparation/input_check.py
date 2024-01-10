@@ -24,41 +24,42 @@ def file_exist(file):
         exit()
     return
 
-def pdb_res_check(file,hit,otherres):
+def pdb_res_check(file, hit, otherres, temp_dir):
     resname = ['GLY','ALA','VAL','LEU','ILE','ASN','ASP','GLN','PRO',
                'GLU','MET','ARG','LYS','PHE','TRP','TYR','THR','SER',
                'CYS','CYX','HIS','HIE','HID','HIP']
     resname.append(hit)
     reslist = []
     ligfile = ''
+    #->同じ化合物が2個以上入っている場合に未対応。(2024/01/10)
     if otherres:
         for j in otherres:
+            resname.append(j)
             othfile = ''
             for i in open(file,'r'):
                 if i[0:6]=='ATOM  'or i[0:6]=='HETATM':
                     if i[17:20]==j:
                         othfile+=(i)
-            with open(j+'.pdb','w')as out:
+            with open(temp_dir+j+'.pdb','w')as out:
                 out.write(othfile)
-
-
+    #<-同じ化合物が2個以上入っている場合に未対応。(2024/01/10)
 
     for i in open(file,'r'):
         if i[0:6]=='ATOM  'or i[0:6]=='HETATM':
-            if i[17:20] not in resname:
+            if i[17:20] not in resname and i[17:20] not in ["HOH", "WAT"]:
                 print('WARNING! this residue is irregular.')
                 print(i)
             if i[17:20]=='HIS':
                 print('WARNING! Histidine should be specified HIE/HID/HIP')
                 print(i)
-            #if i[17:20]=='CYS':
-                #print('CHECK this Cysteine does not form SS-bond?')
+            if i[17:20]=='CYS':
+                print('CHECK this Cysteine does not form SS-bond?')
             if i[17:20]==hit:
                 ligfile+=(i)
             if i[17:20].replace(' ','') not in reslist:
                 reslist.append(i[17:20].replace(' ',''))
 
-    with open(hit+'.pdb','w')as f:
+    with open(temp_dir+hit+'.pdb','w')as f:
         f.write(ligfile)
     
     if 'HOH' in reslist:
@@ -70,7 +71,9 @@ def pdb_res_check(file,hit,otherres):
     return ligfile, reslist
 
 
-def antechamber(setting, resname):
+def antechamber(setting, resname,temp_dir):
+    hdir = os.getcwd()
+    os.chdir(temp_dir)
     pdb = resname+'.pdb'
     prep = resname+'.prep'
     frcmod = resname+'.frcmod'
@@ -85,23 +88,32 @@ def antechamber(setting, resname):
     else:
         print(resname+" ANTECHAMBER FAILED.")
         exit()
+    os.chdir(hdir)
 
 
-def input_check(setting):
+def input_check(setting, input_dir, temp_dir):
     pdb = setting['preparation']['complex_name']
-    hit = setting['preparation']['ligand_resname']
+    hit = str(setting['preparation']['ligand_resname'])
     otherres = setting['preparation']['other_necessary_residue']
+
     file_exist(pdb)
-    ligfile, reslist = pdb_res_check(pdb,hit, otherres)
+    bash("cp "+input_dir+pdb+" "+temp_dir+pdb)
+    ligfile, reslist = pdb_res_check(temp_dir+pdb, hit, otherres, temp_dir)
     ###ligand parameter###
     if os.path.isfile(hit+'.prep')==False or os.path.isfile(hit+'.frcmod')==False:
-        antechamber(setting, hit)
+        antechamber(setting, hit, temp_dir)
+    else:
+        bash("cp "+input_dir+hit+".prep"+" "+temp_dir+hit+".prep")
+        bash("cp "+input_dir+hit+".frcmod"+" "+temp_dir+hit+".frcmod")
     ###ligand parameter###
     if otherres:
         for j in otherres:
             print(j)
             if os.path.isfile(j+'.prep')==False or os.path.isfile(j+'.frcmod')==False:
-                antechamber(setting, j)
+                antechamber(setting, j, temp_dir)
+            else:
+                bash("cp "+input_dir+j+".prep"+" "+temp_dir+j+".prep")
+                bash("cp "+input_dir+j+".frcmod"+" "+temp_dir+j+".frcmod")
     
     return reslist
 

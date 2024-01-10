@@ -87,7 +87,7 @@ fi
 # fi
 
 ##################
-python ~/apps/acpype.py -p ${input}.parm7 -x ${input}.rst7
+python `dirname $0`/acpype.py -p ${input}.parm7 -x ${input}.rst7
 rm md.mdp em.mdp
 if [ ! -e ${input}_GMX.gro ];then
     echo "No ${input}_GMX.gro file. Exit."
@@ -122,7 +122,7 @@ if [ $R_flag ]; then
     echo "Done!"
 
     echo "making position restraints file..."
-    perl ~/apps/gen_posre.pl ${output}.gro
+    perl `dirname $0`/gen_posre.pl ${output}.gro
     echo "Done!"
 fi
 
