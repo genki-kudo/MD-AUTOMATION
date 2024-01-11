@@ -7,16 +7,17 @@
 ###ex. HIS->HIE/HID/HIP
 ###タンパク質disorderがある場合は、マニュアルで残基補完orキャッピングする
 ###ヒット化合物および非タンパク質残基は水素付加された構造とする
+###ヒット化合物の原子名はユニークなものに設定する
 ###イオンが配位している場合は、該当のCONECT行を削除する(本手法ではNon-bonded Modelを採用するため)
 ##################################################
 
 preparation:
-  complex_name    : original.pdb
-  ligand_resname  : UNK
+  complex_name    : 4YK0_md.pdb
+  ligand_resname  : 986
   other_necessary_residue : 
     #- SAH
     #- ATP
-  #if necessary, specify other comps (ex.SAH, ATP, etc.)
+    #if necessary, specify other comps (ex.SAH, ATP, etc.)
 
   charge_method : gas
   #select charge methods of compound
