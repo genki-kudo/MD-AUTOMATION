@@ -4,20 +4,19 @@
 ```
 #set PATH.
 echo "export PATH=\$PATH:`pwd`/bin" >> ~/.bashrc
+echo 'export PYTHONPATH=$PYTHONPATH:$(pwd)/bin' >> ~/.bashrc
 source ~/.bashrc
 ```
 
 ## input file
-* complex.pdb
+* parameters/complex.pdb
 * conditions.yaml
 
-## Running
+## Running（MD-＞P2C-＞SINCHO）
 ```
-md_perform.py conditions.yaml ./ Tsukuba_workflow/MD/ Tsukuba_workflow/P2C_SINCHO/
+md_perform.py conditions.yaml
 
-p2c_sincho_parallel.py conditions.yaml Tsukuba_workflow/P2C_SINCHO
-```
-## additional
-```
-yamlout conditions.yaml Tsukuba_workflow/P2C_SINCHO/ out/yyyymmdd/sincho_out/
+p2c_sincho_parallel.py conditions.yaml
+
+yamlout.py conditions.yaml
 ```
