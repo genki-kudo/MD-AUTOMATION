@@ -13,28 +13,26 @@ from rdkit import Chem
 from rdkit.Chem import AllChem
 
 
-import json
-
 bash=lambda x:run(x,shell=True)
-
 base = os.path.dirname(os.path.abspath(__file__))
 
-def trjconv(setting, temp_dir):
+def trjconv(setting):
+    temp_dir = setting['MD']['working_directory']
     hdir = os.getcwd()
     os.chdir(temp_dir)
 
-    runtime = setting['production']['runtime']
-    timestep = setting['production']['timestep']
-    interval = setting['production']['output-interval']
+    runtime = setting['MD']['production']['runtime']
+    timestep = setting['MD']['production']['timestep']
+    interval = setting['MD']['production']['output-interval']
 
     bash('gmx_mpi trjconv -f prod.xtc -o prodnj1.xtc -s complex_wat.gro -n index.ndx -pbc nojump << EOF\n System\n EOF')
     bash('gmx_mpi trjconv -f prodnj1.xtc -o prodnj2.xtc -s complex_wat.gro -n index.ndx -center <<EOF\n Protein\n System\n EOF')
     bash('gmx_mpi trjconv -f prodnj2.xtc -o prodnj3.xtc -s complex_wat.gro -n index.ndx -ur rect -pbc mol <<EOF\n System\n EOF')
     bash('gmx_mpi trjconv -f prodnj3.xtc -o prodnj4.xtc -s complex_wat.gro -n index.ndx -fit rot+trans <<EOF\n C-alpha\n System\n EOF')
 
-    b= setting['edit_trajectory']['start-range']
-    e= setting['edit_trajectory']['end-range']
-    steps = setting['edit_trajectory']['necessary-snaps']
+    b= setting['MD']['edit_trajectory']['start-range']
+    e= setting['MD']['edit_trajectory']['end-range']
+    steps = setting['MD']['edit_trajectory']['necessary-snaps']
     allsnaps = int(int(runtime/timestep)/int(interval/timestep))
     rate = (e-b)/runtime
 

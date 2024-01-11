@@ -20,15 +20,16 @@ bash=lambda x:run(x,shell=True)
 base = os.path.dirname(os.path.abspath(__file__))
 name = os.path.normpath(os.path.join(base, './prod.mdp'))
 
-def production(setting, temp_dir):
+def production(setting):
+    temp_dir = setting['MD']['working_directory']
     hdir = os.getcwd()
     os.chdir(temp_dir)
     gro = 'npt8.gro'
     top = 'complex_wat.top'
-    runtime = setting['production']['runtime']
-    timestep = setting['production']['timestep']
-    interval = setting['production']['output-interval']
-    cpu = setting['preparation']['number_of_cpus']
+    runtime = setting['MD']['production']['runtime']
+    timestep = setting['MD']['production']['timestep']
+    interval = setting['MD']['production']['output-interval']
+    cpu = setting['MD']['preparation']['number_of_cpus']
 
     with open(name,'r')as f:
         data_lines = f.read()

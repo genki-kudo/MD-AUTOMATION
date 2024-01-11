@@ -80,7 +80,7 @@ def antechamber(setting, resname,temp_dir):
 
     mol = Chem.MolFromPDBFile(pdb)
     netc = Chem.rdmolops.GetFormalCharge(mol)
-    bash('antechamber -i '+pdb+' -fi pdb -o '+prep+' -fo prepi -c '+setting['preparation']['charge_method']+' -at '+setting['tleap']['ff_ligand']+' -nc '+str(netc))
+    bash('antechamber -i '+pdb+' -fi pdb -o '+prep+' -fo prepi -c '+setting['MD']['preparation']['charge_method']+' -at '+setting['MD']['tleap']['ff_ligand']+' -nc '+str(netc))
     bash('parmchk2 -i '+prep+' -o '+frcmod+' -f prepi -s gaff')
 
     if os.path.isfile(prep) and os.path.isfile(frcmod):
@@ -91,20 +91,23 @@ def antechamber(setting, resname,temp_dir):
     os.chdir(hdir)
 
 
-def input_check(setting, input_dir, temp_dir):
-    pdb = setting['preparation']['complex_name']
-    hit = str(setting['preparation']['ligand_resname'])
-    otherres = setting['preparation']['other_necessary_residue']
+def input_check(setting):
+    temp_dir = setting['MD']['working_directory']
+    if not os.path.exists(temp_dir):
+        os.makedirs(temp_dir)
+    pdb = setting['MD']['preparation']['complex_name']
+    hit = str(setting['MD']['preparation']['ligand_resname'])
+    otherres = setting['MD']['preparation']['other_necessary_residue']
 
     file_exist(pdb)
-    bash("cp "+input_dir+pdb+" "+temp_dir+pdb)
-    ligfile, reslist = pdb_res_check(temp_dir+pdb, hit, otherres, temp_dir)
+    bash("cp "+setting['MD']['mv']['input_complex'][0]+" "+setting['MD']['mv']['input_complex'][1])
+    ligfile, reslist = pdb_res_check(pdb, hit, otherres, temp_dir)
     ###ligand parameter###
     if os.path.isfile(hit+'.prep')==False or os.path.isfile(hit+'.frcmod')==False:
         antechamber(setting, hit, temp_dir)
     else:
-        bash("cp "+input_dir+hit+".prep"+" "+temp_dir+hit+".prep")
-        bash("cp "+input_dir+hit+".frcmod"+" "+temp_dir+hit+".frcmod")
+        bash("cp "+hit+".prep"+" "+temp_dir+hit+".prep")
+        bash("cp "+hit+".frcmod"+" "+temp_dir+hit+".frcmod")
     ###ligand parameter###
     if otherres:
         for j in otherres:
@@ -112,8 +115,8 @@ def input_check(setting, input_dir, temp_dir):
             if os.path.isfile(j+'.prep')==False or os.path.isfile(j+'.frcmod')==False:
                 antechamber(setting, j, temp_dir)
             else:
-                bash("cp "+input_dir+j+".prep"+" "+temp_dir+j+".prep")
-                bash("cp "+input_dir+j+".frcmod"+" "+temp_dir+j+".frcmod")
+                bash("cp "+j+".prep"+" "+temp_dir+j+".prep")
+                bash("cp "+j+".frcmod"+" "+temp_dir+j+".frcmod")
     
     return reslist
 

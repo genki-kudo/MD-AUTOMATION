@@ -20,11 +20,12 @@ bash=lambda x:run(x,shell=True)
 base = os.path.dirname(os.path.abspath(__file__))
 
 
-def separate(setting, reslist, temp_dir):
+def separate(setting, reslist):
+    temp_dir = setting['MD']['working_directory']
     hdir = os.getcwd()
     os.chdir(temp_dir)
-    nums = setting['edit_trajectory']['necessary-snaps']
-    outdir = setting['edit_trajectory']['output_dir']
+    nums = setting['MD']['edit_trajectory']['necessary-snaps']
+    outdir = './separate_file/'
     if not os.path.exists(outdir):
         os.makedirs(outdir)
     confs = 'conformations.pdb'
@@ -48,7 +49,7 @@ def separate(setting, reslist, temp_dir):
             if j[0:6]=='ATOM  ' or j[0:6]=='HETATM':
                 if j[17:20].replace(' ','') in reslist:
                     protlist.append(j.rstrip("\n"))
-                if j[17:20].replace(' ','')==str(setting['preparation']['ligand_resname']):
+                if j[17:20].replace(' ','')==str(setting['MD']['preparation']['ligand_resname']):
                     liglist.append(j.rstrip("\n"))
         with open(f_p,'a')as out:
             for j in protlist:

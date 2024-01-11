@@ -1,30 +1,18 @@
 from subprocess import run
 import os
-import glob
-import yaml
-import math
-import shutil
-import sys
-import numpy as np
-import pandas as pd
-import argparse
-import datetime
-from rdkit import Chem
-from rdkit.Chem import AllChem
-
-
-import json
 
 bash=lambda x:run(x,shell=True)
 
 base = os.path.dirname(os.path.abspath(__file__))
 
 
-def outputs(setting, temp_dir, out_dir):
+def outputs(setting):
+    temp_dir = setting['MD']['working_directory']
+    out_dir = setting['P2C']['working_directory']
 
 
-    nums = setting['edit_trajectory']['necessary-snaps']
-    outdir = setting['edit_trajectory']['output_dir']
+    nums = setting['MD']['edit_trajectory']['necessary-snaps']
+    outdir = './separate_file/'
     for i in range(nums+1):
         if not os.path.exists(out_dir+"trajectory_"+str(i).zfill(3)):
             os.makedirs(out_dir+"trajectory_"+str(i).zfill(3))

@@ -20,14 +20,10 @@ bash=lambda x:run(x,shell=True)
 base = os.path.dirname(os.path.abspath(__file__))
 name = os.path.normpath(os.path.join(base, './conv_amb_grom/groconvert.sh'))
 
-def convert(temp_dir):
+def convert(setting):
+    temp_dir = setting['MD']['working_directory']
     hdir = os.getcwd()
     os.chdir(temp_dir)
-    #base = os.path.dirname(os.path.abspath(os.getcwd()))
-    #base = os.path.abspath(os.getcwd())
-    #print(base)
-    #name = os.path.normpath(os.path.join(base, hdir+'./conv_amb_grom/groconvert.sh'))
-
     file_name = 'complex_wat'
 
     bash('cp '+file_name+'.prmtop leap.parm7')
