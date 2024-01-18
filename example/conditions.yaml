@@ -66,7 +66,7 @@ P2C_SINCHO:
   num_of_parallel   : *num_of_snap
   distance_range    : 10.0
   npairs_per_snap   : 20
-
+  output_method     : {"score_sort_evenly": 1}
 
 
 TSUKUBA_OUTPUT:
