@@ -36,6 +36,8 @@ def separate(setting, reslist):
         ls = f.readlines()
         ls_rstrip = [l.rstrip("\n") for l in ls]
     for i in range(nums+1):
+        with open(outdir+'/conf_'+str(i).zfill(3)+'.pdb','w')as out:
+            out.truncate(0)
         with open(outdir+'/conf_'+str(i).zfill(3)+'.pdb', 'a')as out:
             for j in range(i*perconf, (i+1)*perconf):
                 out.write("%s\n" % ls_rstrip[j])
@@ -43,6 +45,10 @@ def separate(setting, reslist):
     for i in range(nums+1):
         f_p = outdir+'/prot_'+str(i).zfill(3)+'.pdb'
         f_l = outdir+'/lig_'+str(i).zfill(3)+'.pdb'
+        with open(f_p,'w')as out:
+            out.truncate(0)
+        with open(f_l,'w')as out:
+            out.truncate(0)
         protlist = []
         liglist = []
         for j in open(outdir+'/conf_'+str(i).zfill(3)+'.pdb'):
