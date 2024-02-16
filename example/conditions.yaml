@@ -69,5 +69,5 @@ P2C_SINCHO:
   output_method     : {"score_sort_evenly": 1}
 
 
-TSUKUBA_OUTPUT:
-  directory : out/yyyymmdd/1cycle/sincho_out/
+OUTPUT:
+  directory : out/yyyymmdd/
