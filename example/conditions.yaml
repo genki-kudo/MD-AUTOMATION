@@ -26,6 +26,8 @@ MD:
     charge_method : gas
     #select charge methods of compound
     #you can select from gas/bcc/...
+    additional_ff_parameter	:frcmod.ions234lm_1264_tip3p
+    #you can specify add. forcefield parameters(ex. ion's parameter)
     number_of_cpus: 8
   
   tleap:
