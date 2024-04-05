@@ -17,7 +17,7 @@ MD:
   ###イオンが配位している場合は、該当のCONECT行を削除する(本手法ではNon-bonded Modelを採用するため)
   ##################################################
   preparation:
-    complex_name    : &complex_name parameters/4YK0_md.pdb
+    complex_name    : &complex_name 4YK0_md.pdb
     ligand_resname  : 986
     other_necessary_residue : 
       #- SAH
@@ -45,7 +45,8 @@ MD:
     ff_water   : tip3p
     ligand_parameter : 
     #if you prepare lig.prep and lig.frcmod for accurate parameter use.
-    additional_ff_parameter	:frcmod.ions234lm_1264_tip3p
+    additional_ff_parameter: 
+      - frcmod.ions234lm_1264_tip3p
 
   production:
     runtime         : 500 #ps-order 
