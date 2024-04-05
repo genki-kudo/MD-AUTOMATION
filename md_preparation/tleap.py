@@ -51,8 +51,8 @@ def tleap_exec(setting):
                 print('loadAmberPrep '+str(j)+'.prep', file=leap)
                 print('loadamberparams '+str(j)+'.frcmod', file=leap)
         print('loadamberparams frcmod.ions1lm_1264_tip3p', file=leap)
-        if setting['MD']['preparation']['other_necessary_residue']:
-            for j in setting['MD']['preparation']['other_necessary_residue']
+        if setting['MD']['tleap']['additional_ff_parameter']:
+            for j in setting['MD']['tleap']['additional_ff_parameter']
                 print('loadamberparams '+str(j), file=leap)
         
         print()
