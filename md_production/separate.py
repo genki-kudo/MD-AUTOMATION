@@ -34,23 +34,25 @@ def separate(setting, reslist, temp_dir):
     with open(confs)as f:
         ls = f.readlines()
         ls_rstrip = [l.rstrip("\n") for l in ls]
+
+    order_scale = int(len(str(int(nums)))+1)
     for i in range(nums+1):
-        with open(outdir+'/conf_'+str(i).zfill(3)+'.pdb','w')as out:
+        with open(outdir+'/conf_'+str(i).zfill(order_scale)+'.pdb','w')as out:
             out.truncate(0)
-        with open(outdir+'/conf_'+str(i).zfill(3)+'.pdb', 'a')as out:
+        with open(outdir+'/conf_'+str(i).zfill(order_scale)+'.pdb', 'a')as out:
             for j in range(i*perconf, (i+1)*perconf):
                 out.write("%s\n" % ls_rstrip[j])
 
     for i in range(nums+1):
-        f_p = outdir+'/prot_'+str(i).zfill(3)+'.pdb'
-        f_l = outdir+'/lig_'+str(i).zfill(3)+'.pdb'
+        f_p = outdir+'/prot_'+str(i).zfill(order_scale)+'.pdb'
+        f_l = outdir+'/lig_'+str(i).zfill(order_scale)+'.pdb'
         with open(f_p,'w')as out:
             out.truncate(0)
         with open(f_l,'w')as out:
             out.truncate(0)
         protlist = []
         liglist = []
-        for j in open(outdir+'/conf_'+str(i).zfill(3)+'.pdb'):
+        for j in open(outdir+'/conf_'+str(i).zfill(order_scale)+'.pdb'):
             if j[0:6]=='ATOM  ' or j[0:6]=='HETATM':
                 if j[17:20].replace(' ','') in reslist:
                     protlist.append(j.rstrip("\n"))
