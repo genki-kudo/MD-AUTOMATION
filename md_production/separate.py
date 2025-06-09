@@ -20,8 +20,7 @@ bash=lambda x:run(x,shell=True)
 base = os.path.dirname(os.path.abspath(__file__))
 
 
-def separate(setting, reslist):
-    temp_dir = setting['MD']['working_directory']
+def separate(setting, reslist, temp_dir):
     hdir = os.getcwd()
     os.chdir(temp_dir)
     nums = setting['MD']['edit_trajectory']['necessary-snaps']

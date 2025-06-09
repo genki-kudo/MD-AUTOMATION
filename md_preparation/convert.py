@@ -20,8 +20,7 @@ bash=lambda x:run(x,shell=True)
 base = os.path.dirname(os.path.abspath(__file__))
 name = os.path.normpath(os.path.join(base, './conv_amb_grom/groconvert.sh'))
 
-def convert(setting):
-    temp_dir = setting['MD']['working_directory']
+def convert(setting, temp_dir):
     hdir = os.getcwd()
     os.chdir(temp_dir)
     file_name = 'complex_wat'

@@ -21,20 +21,23 @@ conditions = str(sys.argv[1]) # condition.yaml
 with open(conditions,'r')as f:
     setting = yaml.safe_load(f)
 
-reslist = input_check(setting)
-tleap_exec(setting)
-convert(setting)
+
+temp_dir =  os.path.join(setting['OUTPUT']['directory'], setting['MD']['working_directory'])
+
+reslist = input_check(setting, temp_dir)
+tleap_exec(setting, temp_dir)
+convert(setting, temp_dir)
 
 ###equilibration###
-equilibration(setting)
+equilibration(setting, temp_dir)
 
 ###prodiction###
-production(setting)
+production(setting, temp_dir)
 
 ###post-MD
-trjconv(setting)
-separate(setting, reslist)
-outputs(setting)
+trjconv(setting, temp_dir)
+separate(setting, reslist, temp_dir)
+outputs(setting, temp_dir)
 
 
 

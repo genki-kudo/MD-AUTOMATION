@@ -16,8 +16,7 @@ from rdkit.Chem import AllChem
 bash=lambda x:run(x,shell=True)
 base = os.path.dirname(os.path.abspath(__file__))
 
-def trjconv(setting):
-    temp_dir = setting['MD']['working_directory']
+def trjconv(setting, temp_dir):
     hdir = os.getcwd()
     os.chdir(temp_dir)
 

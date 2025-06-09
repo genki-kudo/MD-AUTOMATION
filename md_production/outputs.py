@@ -6,10 +6,8 @@ bash=lambda x:run(x,shell=True)
 base = os.path.dirname(os.path.abspath(__file__))
 
 
-def outputs(setting):
-    temp_dir = setting['MD']['working_directory']
+def outputs(setting, temp_dir):
     out_dir = setting['P2C_SINCHO']['working_directory']
-
 
     nums = setting['MD']['edit_trajectory']['necessary-snaps']
     outdir = './separate_file/'

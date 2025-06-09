@@ -20,8 +20,7 @@ bash=lambda x:run(x,shell=True)
 base = os.path.dirname(os.path.abspath(__file__))
 name = os.path.normpath(os.path.join(base, './prod.mdp'))
 
-def production(setting):
-    temp_dir = setting['MD']['working_directory']
+def production(setting, temp_dir):
     hdir = os.getcwd()
     os.chdir(temp_dir)
     gro = 'npt8.gro'

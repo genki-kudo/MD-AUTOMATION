@@ -17,8 +17,7 @@ import json
 
 bash=lambda x:run(x,shell=True)
 
-def tleap_exec(setting):
-    temp_dir = setting['MD']['working_directory']
+def tleap_exec(setting, temp_dir):
     hdir = os.getcwd()
     os.chdir(temp_dir)
 

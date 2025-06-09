@@ -91,8 +91,7 @@ def antechamber(setting, resname,temp_dir):
     os.chdir(hdir)
 
 
-def input_check(setting):
-    temp_dir = setting['MD']['working_directory']
+def input_check(setting, temp_dir):
     if not os.path.exists(temp_dir):
         os.makedirs(temp_dir)
     pdb = setting['MD']['preparation']['complex_name']
