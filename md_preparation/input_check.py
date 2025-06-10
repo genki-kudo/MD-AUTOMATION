@@ -40,7 +40,7 @@ def pdb_res_check(file, hit, otherres, temp_dir):
                 if i[0:6]=='ATOM  'or i[0:6]=='HETATM':
                     if i[17:20]==j:
                         othfile+=(i)
-            with open(temp_dir+j+'.pdb','w')as out:
+            with open(os.path.join(temp_dir, j+'.pdb'),'w')as out:
                 out.write(othfile)
     #<-同じ化合物が2個以上入っている場合に未対応。(2024/01/10)
 
@@ -59,7 +59,7 @@ def pdb_res_check(file, hit, otherres, temp_dir):
             if i[17:20].replace(' ','') not in reslist:
                 reslist.append(i[17:20].replace(' ',''))
 
-    with open(temp_dir+hit+'.pdb','w')as f:
+    with open(os.path.join(temp_dir, hit+'.pdb'),'w')as f:
         f.write(ligfile)
     
     if 'HOH' in reslist:
@@ -92,21 +92,20 @@ def antechamber(setting, resname,temp_dir):
 
 
 def input_check(setting, temp_dir):
-    if not os.path.exists(temp_dir):
-        os.makedirs(temp_dir)
+    os.makedirs(temp_dir,exist_ok=True)
     pdb = setting['MD']['preparation']['complex_name']
     hit = str(setting['MD']['preparation']['ligand_resname'])
     otherres = setting['MD']['preparation']['other_necessary_residue']
 
     file_exist(pdb)
-    bash("cp "+setting['MD']['mv']['input_complex'][0]+" "+setting['MD']['mv']['input_complex'][1])
+    bash("cp "+setting['MD']['preparation']['complex_name']+" "+temp_dir+"/")
     ligfile, reslist = pdb_res_check(pdb, hit, otherres, temp_dir)
     ###ligand parameter###
     if os.path.isfile(hit+'.prep')==False or os.path.isfile(hit+'.frcmod')==False:
         antechamber(setting, hit, temp_dir)
     else:
-        bash("cp "+hit+".prep"+" "+temp_dir+hit+".prep")
-        bash("cp "+hit+".frcmod"+" "+temp_dir+hit+".frcmod")
+        bash("cp "+hit+".prep"+" "+temp_dir+"/"+hit+".prep")
+        bash("cp "+hit+".frcmod"+" "+temp_dir+"/"+hit+".frcmod")
     ###ligand parameter###
     if otherres:
         for j in otherres:
@@ -114,8 +113,8 @@ def input_check(setting, temp_dir):
             if os.path.isfile(j+'.prep')==False or os.path.isfile(j+'.frcmod')==False:
                 antechamber(setting, j, temp_dir)
             else:
-                bash("cp "+j+".prep"+" "+temp_dir+j+".prep")
-                bash("cp "+j+".frcmod"+" "+temp_dir+j+".frcmod")
+                bash("cp "+j+".prep"+" "+temp_dir+"/"+j+".prep")
+                bash("cp "+j+".frcmod"+" "+temp_dir+"/"+j+".frcmod")
     
     return reslist
 
