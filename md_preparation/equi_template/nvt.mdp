@@ -1,4 +1,3 @@
-
 title		= complex_wat ff14SB NVT equilibration 
 define		= -DPOSRES1000	; position restrain the protein and ligand
 ; Run parameters
@@ -39,7 +38,7 @@ pbc		= xyz		    ; 3-D PBC
 ; Dispersion correction
 DispCorr	= EnerPres	; account for cut-off vdW scheme
 ; Velocity generation
-gen_vel		= no		; assign velocities from Maxwell distribution
+gen_vel		= yes	; assign velocities from Maxwell distribution
 gen_temp	= 100		; temperature for Maxwell distribution
 gen_seed	= -1		; generate a random seed
 
