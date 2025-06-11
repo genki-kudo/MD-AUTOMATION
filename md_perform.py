@@ -25,6 +25,7 @@ with open(conditions,'r')as f:
 temp_dir =  os.path.join(setting['OUTPUT']['directory'], setting['MD']['working_directory'])
 
 reslist = input_check(setting, temp_dir)
+
 tleap_exec(setting, temp_dir)
 convert(setting, temp_dir)
 
