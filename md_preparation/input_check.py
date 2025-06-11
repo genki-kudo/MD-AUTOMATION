@@ -81,7 +81,7 @@ def antechamber(setting, resname,temp_dir):
     mol = Chem.MolFromPDBFile(pdb)
     netc = Chem.rdmolops.GetFormalCharge(mol)
     bash('antechamber -i '+pdb+' -fi pdb -o '+prep+' -fo prepi -c '+setting['MD']['preparation']['charge_method']+' -at '+setting['MD']['tleap']['ff_ligand']+' -nc '+str(netc))
-    bash('parmchk2 -i '+prep+' -o '+frcmod+' -f prepi -s gaff')
+    bash('parmchk2 -i '+prep+' -o '+frcmod+' -f prepi -s '+setting['MD']['tleap']['ff_ligand'])
 
     if os.path.isfile(prep) and os.path.isfile(frcmod):
         pass
@@ -101,11 +101,11 @@ def input_check(setting, temp_dir):
     bash("cp "+setting['MD']['preparation']['complex_name']+" "+temp_dir+"/")
     ligfile, reslist = pdb_res_check(pdb, hit, otherres, temp_dir)
     ###ligand parameter###
-    if os.path.isfile(hit+'.prep')==False or os.path.isfile(hit+'.frcmod')==False:
+    if setting['MD']['tleap']['ligand_parameter']:
+        for param_file in setting['MD']['tleap']['ligand_parameter']:
+            bash(f"cp {param_file} {temp_dir}/ ")
+    if os.path.isfile(temp_dir+'/'+hit+'.prep')==False or os.path.isfile(temp_dir+'/'+hit+'.frcmod')==False:
         antechamber(setting, hit, temp_dir)
-    else:
-        bash("cp "+hit+".prep"+" "+temp_dir+"/"+hit+".prep")
-        bash("cp "+hit+".frcmod"+" "+temp_dir+"/"+hit+".frcmod")
     ###ligand parameter###
     if otherres:
         for j in otherres:
