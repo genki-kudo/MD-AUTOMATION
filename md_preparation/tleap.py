@@ -42,7 +42,7 @@ def tleap_exec(setting, temp_dir):
     with open('./leap.txt','a')as leap:
         print('source leaprc.protein.'+setting['MD']['tleap']['ff_protein'], file=leap)
         print('source leaprc.'+setting['MD']['tleap']['ff_ligand'], file=leap)
-        print('source leaprc.water.'+setting['MD']['tleap']['ff_water'], file=leap)
+        print('source leaprc.water.'+setting['MD']['tleap']['ff_water'].lower(), file=leap)
         print('loadAmberPrep '+str(setting['MD']['preparation']['ligand_resname'])+'.prep', file=leap)
         print('loadamberparams '+str(setting['MD']['preparation']['ligand_resname'])+'.frcmod', file=leap)
         if setting['MD']['preparation']['other_necessary_residue']:
