@@ -61,9 +61,6 @@ def tleap_exec(setting, temp_dir):
         print('addions2 mol Na+ 0', file=leap)
         print('addions2 mol Cl- 0', file=leap)
 
-        if setting['MD']['tleap']['translate_origin']==True:
-            coordinates = str(centroid[0])+', '+str(centroid[1])+', '+str(centroid[2])
-            print('translate mol {'+coordinates+' }', file=leap)
         
         if setting['MD']['tleap']['box']=='rectangular':
             print('solvatebox mol TIP3PBOX '+str(setting['MD']['tleap']['rect_around_box']), file=leap)
@@ -73,6 +70,9 @@ def tleap_exec(setting, temp_dir):
             print('set mol box {'+length+'}', file=leap)
             print('solvatebox mol TIP3PBOX 0.1', file=leap)
         
+        if setting['MD']['tleap']['translate_origin']==True:
+            coordinates = str(centroid[0])+', '+str(centroid[1])+', '+str(centroid[2])
+            print('translate mol {'+coordinates+' }', file=leap)
 
         print('saveamberparm mol ./complex_wat.prmtop ./complex_wat.inpcrd',file=leap)
         print('savepdb mol complex_wat.pdb',file=leap)
